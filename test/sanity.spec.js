@@ -11,8 +11,8 @@ const allTestsWithPluginConfig = (config = {}) => () => {
 		const value2 = namespace.field
 		namespace.function()`
 
-		const expected = `var value1 = require('module').namespace
-		var value2 = require('module').namespace.field
+		const expected = `const value1 = require('module').namespace
+		const value2 = require('module').namespace.field
 		require('module').namespace.function()`
 
 		testTransform(source, expected)
@@ -24,9 +24,9 @@ const allTestsWithPluginConfig = (config = {}) => () => {
 		const value2 = something.field
 		const value3 = namespace`
 
-		const expected = `var value1 = require('module').namespace
-		var value2 = require('module').namespace.field
-		var value3 = namespace`
+		const expected = `const value1 = require('module').namespace
+		const value2 = require('module').namespace.field
+		const value3 = namespace`
 
 		testTransform(source, expected)
 	})
@@ -36,8 +36,8 @@ const allTestsWithPluginConfig = (config = {}) => () => {
 		const value1 = defExports
 		const value2 = defExports.field`
 
-		const expected = `var value1 = require('module').default
-		var value2 = require('module').default.field`
+		const expected = `const value1 = require('module').default
+		const value2 = require('module').default.field`
 
 		testTransform(source, expected)
 	})
@@ -47,8 +47,8 @@ const allTestsWithPluginConfig = (config = {}) => () => {
 		const value1 = allThings
 		const value2 = allThings.field`
 
-		const expected = `var value1 = require('module')
-		var value2 = require('module').field`
+		const expected = `const value1 = require('module')
+		const value2 = require('module').field`
 
 		testTransform(source, expected)
 	})
@@ -59,8 +59,8 @@ const allTestsWithPluginConfig = (config = {}) => () => {
 		 namespace: 'something'
 		}`
 
-		const expected = `var _module = require('module')
-		var obj = {
+		const expected = `import { namespace } from 'module'
+		const obj = {
 		  namespace: 'something'
 		}`
 
@@ -74,7 +74,7 @@ const allTestsWithPluginConfig = (config = {}) => () => {
 		 other,
 		}`
 
-		const expected = `var obj = {
+		const expected = `const obj = {
 		  something: require('module').namespace,
 		  other: require('module').namespace
 		}`
@@ -86,8 +86,8 @@ const allTestsWithPluginConfig = (config = {}) => () => {
 		const source = `import { namespace } from 'module'
 		const fn = function (namespace, other) {}`
 
-		const expected = `var _module = require("module")
-		var fn = function fn(namespace, other) {}`
+		const expected = `import { namespace } from 'module'
+		const fn = function (namespace, other) {}`
 
 		testTransform(source, expected)
 	})
@@ -98,8 +98,8 @@ const allTestsWithPluginConfig = (config = {}) => () => {
 			function namespace(args) {}
 		}`
 
-		const expected = `var _module = require('module')
-		var f = function f() {
+		const expected = `import { namespace } from 'module'
+		const f = () => {
 			function namespace(args) {}
 		}`
 
@@ -110,8 +110,8 @@ const allTestsWithPluginConfig = (config = {}) => () => {
 		const source = `import { namespace } from 'module'
 		const fn = function namespace(args) {}`
 
-		const expected = `var _module = require('module')
-		var fn = function namespace(args) {}`
+		const expected = `import { namespace } from 'module'
+		const fn = function namespace(args) {}`
 
 		testTransform(source, expected)
 	})
@@ -122,14 +122,10 @@ const allTestsWithPluginConfig = (config = {}) => () => {
 
 		export { namespace as myNamespace, anotherExportedValue }`
 
-		const expected = `Object.defineProperty(exports, '__esModule', {
-			value: true
-		})
-		exports.myNamespace = exports.anotherExportedValue = void 0
-		var anotherExportedValue = true
-		exports.anotherExportedValue = anotherExportedValue
-		var __importToInlineRequirePlugin_exported_myNamespace__namespace = require('module').namespace
-		exports.myNamespace = __importToInlineRequirePlugin_exported_myNamespace__namespace
+		const expected = `
+		const anotherExportedValue = true
+		const __importToInlineRequirePlugin_exported_myNamespace__namespace = require('module').namespace
+		export { __importToInlineRequirePlugin_exported_myNamespace__namespace as myNamespace, anotherExportedValue }
 		`
 
 		testTransform(source, expected)
@@ -141,14 +137,10 @@ const allTestsWithPluginConfig = (config = {}) => () => {
 		export { namespace as myNamespace }
 		export { namespace as myOtherNamespace }`
 
-		const expected = `Object.defineProperty(exports, '__esModule', {
-			value: true
-		})
-		exports.myOtherNamespace = exports.myNamespace = void 0
-		var __importToInlineRequirePlugin_exported_myNamespace__namespace = require('module').namespace
-		exports.myNamespace = __importToInlineRequirePlugin_exported_myNamespace__namespace
-		var __importToInlineRequirePlugin_exported_myOtherNamespace__namespace = require('module').namespace
-		exports.myOtherNamespace = __importToInlineRequirePlugin_exported_myOtherNamespace__namespace
+		const expected = `const __importToInlineRequirePlugin_exported_myNamespace__namespace = require('module').namespace
+		export { __importToInlineRequirePlugin_exported_myNamespace__namespace as myNamespace }
+		const __importToInlineRequirePlugin_exported_myOtherNamespace__namespace = require('module').namespace
+		export { __importToInlineRequirePlugin_exported_myOtherNamespace__namespace as myOtherNamespace }
 		`
 
 		testTransform(source, expected)
@@ -162,7 +154,7 @@ const allTestsWithPluginConfig = (config = {}) => () => {
 		}`
 
 		const expected = `
-		var fn = function fn(arg) {
+		const fn = arg => {
 			return require('module').namespace(arg);
 		}`
 

@@ -109,8 +109,8 @@ describe('Configuration', () => {
         const source = `import { namespace } from 'module'
 		const value1 = namespace`
 
-        const expected = `var _module = require('module')
-		var value1 = _module.namespace`
+        const expected = `import { namespace } from 'module'
+		const value1 = namespace`
 
         transformCompare(source, expected, { excludeFiles: [/ignore/] }, 'ignoredFile.js')
     })
@@ -123,11 +123,11 @@ describe('Configuration', () => {
 		const value2 = otherNamespace
 		const value3 = otherOtherNamespace`
 
-        const expected = `var _ignoredModule = require('ignoredModule')
-		var _subModule = require('ignoredModule/subModule')
-		var value1 = require('module').namespace
-		var value2 = _ignoredModule.otherNamespace
-		var value3 = _subModule.otherOtherNamespace`
+        const expected = `import { otherNamespace } from 'ignoredModule'
+		import { otherOtherNamespace } from 'ignoredModule/subModule'
+		const value1 = require('module').namespace
+		const value2 = otherNamespace
+		const value3 = otherOtherNamespace`
 
         transformCompare(source, expected, { excludeModules: [/ignore/] }, 'file.js')
     })
@@ -142,12 +142,12 @@ describe('Configuration', () => {
 		const value3 = otherOtherNamespace
 		const value4 = otherIncludedNamespace`
 
-        const expected = `var _ignoredModule = require('ignoredModule')
-		var _subModule = require('ignoredModule/subModule')
-		var value1 = require('module').namespace
-		var value2 = _ignoredModule.otherNamespace
-		var value3 = _subModule.otherOtherNamespace
-		var value4 = require('notignoredModule').otherIncludedNamespace`
+        const expected = `import { otherNamespace } from 'ignoredModule'
+		import { otherOtherNamespace } from 'ignoredModule/subModule'
+		const value1 = require('module').namespace
+		const value2 = otherNamespace
+		const value3 = otherOtherNamespace
+		const value4 = require('notignoredModule').otherIncludedNamespace`
 
         transformCompare(source, expected, { excludeModules: ['ignoredModule'] }, 'file.js')
     })
