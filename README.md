@@ -77,6 +77,6 @@ and so `lodash` module will not be loaded unless `someCondition` is actually tru
 | name               | type                 | default | description                                                             |
 |--------------------|----------------------|---------|-------------------------------------------------------------------------|
 | verbose            | Boolean              | false   | Toggle verbose logging                                                  |
-| excludeFiles       | Array<String/RegExp> | []      | Skip replacing import statements in certain files                       |
-| excludeModules     | Array<String/RegExp> | []      | Skip replacing import statements of certain modules in all files        |
+| excludeFiles       | Array<String/RegExp> | [ ]     | Skip replacing import statements in certain files                       |
+| excludeModules     | Array<String/RegExp> | [ ]     | Skip replacing import statements of certain modules in all files        |
 | naiveStringReplace | Boolean              | false   | Use string literal value when modifying code instead of using AST nodes |
