@@ -1,3 +1,6 @@
+[![Run tests](https://github.com/lirancr/import-to-inlined-require-babel-plugin/actions/workflows/test.yml/badge.svg)](https://github.com/lirancr/import-to-inlined-require-babel-plugin/actions/workflows/test.yml)
+[![NPM Version](https://badge.fury.io/js/import-to-inlined-require-babel-plugin.svg?style=flat)](https://www.npmjs.com/package/import-to-inlined-require-babel-plugin)
+
 # Import to Inline Require - babel plugin
 
 Used to converted import statements into an inline require statements. 
